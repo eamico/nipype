@@ -27,6 +27,7 @@ import tempfile
 from warnings import warn
 
 import sqlite3
+from nipype.utils.misc import human_order_sorted
 
 try:
     import pyxnat
@@ -507,7 +508,7 @@ class DataGrabber(IOBase):
                         warn(msg)
                 else:
                     if self.inputs.sort_filelist:
-                        filelist.sort()
+                        filelist = human_order_sorted(filelist)
                     outputs[key] = list_to_filename(filelist)
             for argnum, arglist in enumerate(args):
                 maxlen = 1
@@ -545,7 +546,7 @@ class DataGrabber(IOBase):
                         outputs[key].append(None)
                     else:
                         if self.inputs.sort_filelist:
-                            outfiles.sort()
+                            outfiles = human_order_sorted(outfiles)
                         outputs[key].append(list_to_filename(outfiles))
             if any([val is None for val in outputs[key]]):
                 outputs[key] = []
@@ -688,7 +689,7 @@ class SelectFiles(IOBase):
 
             # Possibly sort the list
             if self.inputs.sort_filelist:
-                filelist.sort()
+                filelist = human_order_sorted(filelist)
 
             # Handle whether this must be a list or not
             if field not in force_lists:
@@ -811,7 +812,7 @@ class DataFinder(IOBase):
                               root_path.count(os.sep))
                 #If the max path depth has been reached, clear sub_dirs
                 #and files
-                if not max_depth is not None and curr_depth >= max_depth:
+                if max_depth is not None and curr_depth >= max_depth:
                     sub_dirs[:] = []
                     files = []
                 #Test the path for the curr_dir and all files
