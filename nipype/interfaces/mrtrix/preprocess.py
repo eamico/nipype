@@ -219,8 +219,12 @@ class Tensor2FractionalAnisotropy(CommandLine):
         else:
             return None
     def _gen_outfilename(self):
-        _, name , _ = split_filename(self.inputs.in_file)
-        return name + '_FA.mif'
+        if isdefined(self.inputs.out_filename):
+            outname = self.inputs.out_filename
+        else:
+            _, name , _ = split_filename(self.inputs.in_file)
+            outname = name + '_FA.mif'
+        return outname
 
 class Tensor2ApparentDiffusionInputSpec(CommandLineInputSpec):
     in_file = File(exists=True, argstr='%s', mandatory=True, position=-2,
@@ -260,8 +264,12 @@ class Tensor2ApparentDiffusion(CommandLine):
         else:
             return None
     def _gen_outfilename(self):
-        _, name , _ = split_filename(self.inputs.in_file)
-        return name + '_ADC.mif'
+        if isdefined(self.inputs.out_filename):
+            outname = self.inputs.out_filename
+        else:
+            _, name , _ = split_filename(self.inputs.in_file)
+            outname = name + '_ADC.mif'
+        return outname
 
 class MRMultiplyInputSpec(CommandLineInputSpec):
     in_files = InputMultiPath(File(exists=True),
@@ -302,8 +310,12 @@ class MRMultiply(CommandLine):
         else:
             return None
     def _gen_outfilename(self):
-        _, name , _ = split_filename(self.inputs.in_files[0])
-        return name + '_MRMult.mif'
+        if isdefined(self.inputs.out_filename):
+            outname = self.inputs.out_filename
+        else:
+            _, name , _ = split_filename(self.inputs.in_files[0])
+            outname = name + '_MRmult.mif'
+        return outname
 
 class MRTrixViewerInputSpec(CommandLineInputSpec):
     in_files = InputMultiPath(File(exists=True), argstr='%s', mandatory=True,
@@ -365,7 +377,7 @@ class MRTrixInfo(CommandLine):
 class GenerateWhiteMatterMaskInputSpec(CommandLineInputSpec):
     in_file = File(exists=True, argstr='%s', mandatory=True, position=-3, desc='Diffusion-weighted images')
     binary_mask = File(exists=True, argstr='%s', mandatory=True, position = -2, desc='Binary brain mask')
-    out_WMProb_filename = File(genfile=True, argstr='%s', position = -1, desc='Output WM probability image filename')
+    out_filename = File(genfile=True, argstr='%s', position = -1, desc='Output WM probability image filename')
     encoding_file = File(exists=True, argstr='-grad %s', mandatory=True, position=1,
     desc='Gradient encoding, supplied as a 4xN text file with each line is in the format [ X Y Z b ], where [ X Y Z ] describe the direction of the applied gradient, and b gives the b-value in units (1000 s/mm^2). See FSL2MRTrix')
     noise_level_margin = traits.Float(argstr='-margin %s', desc='Specify the width of the margin on either side of the image to be used to estimate the noise level (default = 10)')
@@ -397,13 +409,17 @@ class GenerateWhiteMatterMask(CommandLine):
         return outputs
 
     def _gen_filename(self, name):
-        if name is 'out_WMProb_filename':
+        if name is 'out_filename':
             return self._gen_outfilename()
         else:
             return None
     def _gen_outfilename(self):
-        _, name , _ = split_filename(self.inputs.in_file)
-        return name + '_WMProb.mif'
+        if isdefined(self.inputs.out_filename):
+            outname = self.inputs.out_filename
+        else:
+            _, name , _ = split_filename(self.inputs.in_file)
+            outname = name + '_WMprob.mif'
+        return outname
 
 class ErodeInputSpec(CommandLineInputSpec):
     in_file = File(exists=True, argstr='%s', mandatory=True, position=-2,
@@ -444,8 +460,12 @@ class Erode(CommandLine):
         else:
             return None
     def _gen_outfilename(self):
-        _, name , _ = split_filename(self.inputs.in_file)
-        return name + '_erode.mif'
+        if isdefined(self.inputs.out_filename):
+            outname = self.inputs.out_filename
+        else:
+            _, name , _ = split_filename(self.inputs.in_file)
+            outname = name + '_erode.mif'
+        return outname
 
 class ThresholdInputSpec(CommandLineInputSpec):
     in_file = File(exists=True, argstr='%s', mandatory=True, position=-2,
@@ -494,8 +514,12 @@ class Threshold(CommandLine):
         else:
             return None
     def _gen_outfilename(self):
-        _, name , _ = split_filename(self.inputs.in_file)
-        return name + '_thresh.mif'
+        if isdefined(self.inputs.out_filename):
+            outname = self.inputs.out_filename
+        else:
+            _, name , _ = split_filename(self.inputs.in_file)
+            outname = name + '_thresh.mif'
+        return outname
 
 class MedianFilter3DInputSpec(CommandLineInputSpec):
     in_file = File(exists=True, argstr='%s', mandatory=True, position=-2,
@@ -535,8 +559,12 @@ class MedianFilter3D(CommandLine):
         else:
             return None
     def _gen_outfilename(self):
-        _, name , _ = split_filename(self.inputs.in_file)
-        return name + '_median3D.mif'
+        if isdefined(self.inputs.out_filename):
+            outname = self.inputs.out_filename
+        else:
+            _, name , _ = split_filename(self.inputs.in_file)
+            outname = name + '_median3d.mif'
+        return outname
 
 class MRTransformInputSpec(CommandLineInputSpec):
     in_files = InputMultiPath(File(exists=True), argstr='%s', mandatory=True,
@@ -585,5 +613,9 @@ class MRTransform(CommandLine):
         else:
             return None
     def _gen_outfilename(self):
-        _, name , _ = split_filename(self.inputs.in_files[0])
-        return name + '_MRTransform.mif'
+        if isdefined(self.inputs.out_filename):
+            outname = self.inputs.out_filename
+        else:
+            _, name , _ = split_filename(self.inputs.in_file)
+            outname = name + '_MRtransform.mif'
+        return outname

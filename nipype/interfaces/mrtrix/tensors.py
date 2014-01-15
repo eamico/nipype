@@ -157,8 +157,12 @@ class ConstrainedSphericalDeconvolution(CommandLine):
         else:
             return None
     def _gen_outfilename(self):
-        _, name , _ = split_filename(self.inputs.in_file)
-        return name + '_CSD.mif'
+        if isdefined(self.inputs.out_filename):
+            outname = self.inputs.out_filename
+        else:
+            _, name , _ = split_filename(self.inputs.in_file)
+            outname = name + '_CSD.mif'
+        return outname
 
 class EstimateResponseForSHInputSpec(CommandLineInputSpec):
     in_file = File(exists=True, argstr='%s', mandatory=True, position=-3, desc='Diffusion-weighted images')

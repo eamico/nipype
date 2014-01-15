@@ -68,8 +68,12 @@ class Tracks2Prob(CommandLine):
         else:
             return None
     def _gen_outfilename(self):
-        _, name , _ = split_filename(self.inputs.in_file)
-        return name + '_TDI.mif'
+        if isdefined(self.inputs.out_filename):
+            outname = self.inputs.out_filename
+        else:
+            _, name , _ = split_filename(self.inputs.in_file)
+            outname = name + '_TDI.mif'
+        return outname
 
 class StreamlineTrackInputSpec(CommandLineInputSpec):
     in_file = File(exists=True, argstr='%s', mandatory=True, position=-2, desc='the image containing the source data.' \
